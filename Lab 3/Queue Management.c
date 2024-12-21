@@ -3,7 +3,6 @@
 #include "task.h"
 #include "USART.h"
 #include "queue.h"
-#include "supporting_functions.h"
 #include <stdio.h>
 #include <avr/io.h>
 #include <util/delay.h>
@@ -33,11 +32,10 @@ static void vReceiverTask (void *pvParameters);
 QueueHandle_t xQueue;
 
 
-int main (void)
-{
+int main (void) {
 	USART_init();
-		
-    // ToDo [1] */
+	
+	// ToDo [1] */
 	xQueue = xQueueCreate(5, sizeof(long));
 	
 	if (xQueue != NULL) {
@@ -48,7 +46,7 @@ int main (void)
 		
 		/* ToDo [3] */
 		xTaskCreate(vReceiverTask, "Receive from Queue", 256, NULL, 2, NULL);
-	
+		
 		vTaskStartScheduler();
 	}
 	else {
@@ -62,8 +60,7 @@ int main (void)
 
 /*-----------------------------------------------------------*/
 
-static void vSenderTask (void* pvParameters)
-{
+static void vSenderTask (void* pvParameters) {
 	BaseType_t xStatus;
 	TickType_t xLastWakeTime = xTaskGetTickCount();
 	long lValueToSend = (long) pvParameters;
@@ -85,8 +82,7 @@ static void vSenderTask (void* pvParameters)
 
 /*-----------------------------------------------------------*/
 
-static void vReceiverTask (void *pvParameters)
-{
+static void vReceiverTask (void *pvParameters) {
 	long lReceivedValue;
 	BaseType_t xStatus;
 	const TickType_t xTicksToWait = pdMS_TO_TICKS(99UL);
@@ -95,7 +91,7 @@ static void vReceiverTask (void *pvParameters)
 		
 		// As this task unblocks immediately that data is written to the queue this call should always find the queue empty.
 		if (uxQueueMessagesWaiting (xQueue) != 0) {
-		   USART_sendstr("Queue should be empty!\r\n");
+			USART_sendstr("Queue should be empty!\r\n");
 		}
 
 		/* ToDo [5] */
@@ -111,9 +107,3 @@ static void vReceiverTask (void *pvParameters)
 		}
 	}
 }
-
-
-
-
-
-
